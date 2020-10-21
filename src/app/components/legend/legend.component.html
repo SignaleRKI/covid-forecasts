@@ -4,13 +4,13 @@
     <label class="col-auto col-form-label">Selection</label>
     <div class="col-auto">
       <div class="btn-group btn-group-sm ml-auto">
-        <button class="btn btn-secondary" (click)="changeWhiteListing([])">
+        <button class="btn btn-secondary" (click)="changeBlacklisting(dataContext.allModelNames)">
           None
         </button>
-        <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.allModelNames)">
+        <button class="btn btn-secondary" (click)="changeBlacklisting([])">
           All
         </button>
-        <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.ensembleModelNames)">
+        <button class="btn btn-secondary" (click)="changeBlacklisting(dataContext.ensembleModelNames)">
           Ensemble
         </button>
       </div>
