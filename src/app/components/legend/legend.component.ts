@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 import { ForecastPlotService } from 'src/app/services/forecast-plot.service';
 import { map } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { SeriesInfo, DataSourceSeriesInfo, ForecastSeriesInfo, ModelInfo } from 
 import { TruthToPlotSource, TruthToPlotValue } from 'src/app/models/truth-to-plot';
 import { faChevronLeft, faChevronRight, faExclamationTriangle, faEye, faEyeSlash, faIndent, faOutdent } from '@fortawesome/free-solid-svg-icons';
 import { LocationLookupItem } from 'src/app/models/lookups';
+import { RestoreScrollPositionDirective } from 'src/app/directives/restore-scroll-position.directive';
 
 type LegendItem = ForecastLegendItem | DataSourceLegendItem;
 
@@ -33,7 +34,7 @@ interface DataSourceLegendItem {
   templateUrl: './legend.component.html',
   styleUrls: ['./legend.component.scss']
 })
-export class LegendComponent implements OnInit {
+export class LegendComponent implements OnInit, AfterViewInit {
   dataContext$: Observable<{ plotValue: TruthToPlotValue, location: LocationLookupItem, ensembleModelNames: string[], allModelNames: string[], items: DataSourceLegendItem[] }>;
   TruthToPlotSource = TruthToPlotSource;
   TruthToPlotValue = TruthToPlotValue;
@@ -46,12 +47,14 @@ export class LegendComponent implements OnInit {
     invisible: faEyeSlash
   }
 
+  scrollPostionStore = new Map<string, number>();
+
   constructor(private stateService: ForecastPlotService) { }
 
   ngOnInit(): void {
+    console.log("INIT LEGEND");
     this.dataContext$ = combineLatest([this.stateService.series$, this.stateService.availableModels$, this.stateService.enabledSeriesNames$, this.stateService.allModelNames$])
       .pipe(map(([series, availableModels, enabledSeriesNames, allModelNames]) => {
-        // const allModelNames = availableModels.map(x => x.name);
         return {
           plotValue: series.settings.plotValue,
           location: series.settings.location,
@@ -62,12 +65,18 @@ export class LegendComponent implements OnInit {
       }));
   }
 
+  ngAfterViewInit(): void {
+
+  }
+
+  storeScrollPosition(scrollKey: string, scrollTop: number) {
+    this.scrollPostionStore[scrollKey] = scrollTop;
+  }
+
   private createForecastLegendItems(forecastModels: ModelInfo[], forecastSeries: SeriesInfo[], enabledSeriesNames: string[]) {
     return _.chain(forecastModels)
       .orderBy(m => m.name)
       .map(m => {
-        // const adjustment = adjustments.has(f.name) && adjustments.get(f.name);
-        // const adjust = adjustment && adjustment !== f.targetSource ? adjustment : null;
         const hasSeries = forecastSeries.some(f => f.model.name === m.name && f.data && f.data.length > 0);
         return {
           $type: 'ForecastLegendItem',
@@ -116,8 +125,8 @@ export class LegendComponent implements OnInit {
     if (item.$type === 'DataSourceLegendItem') {
       item.forecasts.concat(item.shiftedForecasts ? item.shiftedForecasts.forecasts : []).forEach(x => x.enabled = item.enabled);
     }
-    if(item.$type === 'ForecastLegendItem' && item.enabled){
-      const parent = _.find(dsItems, d => d.forecasts.indexOf(item) > -1);
+    if (item.$type === 'ForecastLegendItem' && item.enabled) {
+      const parent = _.find(dsItems, d => d.forecasts.indexOf(item) > -1 || d.shiftedForecasts.forecasts.indexOf(item) > -1);
       parent.enabled = true;
     }
 

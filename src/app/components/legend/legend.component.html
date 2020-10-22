@@ -54,17 +54,17 @@
             <fa-icon [icon]="item.enabled ? icons.visible : icons.invisible"></fa-icon>
           </div>
         </div>
-        <ng-container *ngTemplateOutlet="models; context: {$implicit: item.forecasts, roots: dataContext.items }">
+        <ng-container
+          *ngTemplateOutlet="models; context: {$implicit: item.forecasts, roots: dataContext.items, scrollKey: item.model.name + '_forecasts', shifted: false }">
         </ng-container>
         <ng-container *ngIf="item.shiftedForecasts">
           <div class="card-footer">
             Models orignally based on {{item.shiftedForecasts.origin | labelTruthToPlotSource}} data
           </div>
           <ng-container
-            *ngTemplateOutlet="models; context: {$implicit: item.shiftedForecasts.forecasts,roots: dataContext.items}">
+            *ngTemplateOutlet="models; context: {$implicit: item.shiftedForecasts.forecasts,roots: dataContext.items, scrollKey: item.model.name + '_shiftedForecasts', shifted: true}">
           </ng-container>
         </ng-container>
-
       </div>
     </div>
   </div>
@@ -75,16 +75,17 @@
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="d-block legend-icon shrink-0"
     [ngSwitch]="item.model.style.symbol">
     <polygon points="8,2 14,14 2,14" *ngSwitchCase="'triangle'" [attr.stroke-width]="2"
-      [attr.stroke]="item.model.style.color"
-      [attr.fill]="item.enabled ? item.model.style.color : 'transparent'" />
+      [attr.stroke]="item.model.style.color" [attr.fill]="item.enabled ? item.model.style.color : 'transparent'" />
 
     <circle cx="8" cy="8" r="6" *ngSwitchDefault [attr.stroke-width]="2" [attr.stroke]="item.model.style.color"
       [attr.fill]="item.enabled ? item.model.style.color : 'transparent'" />
   </svg>
 </ng-template>
 
-<ng-template #models let-forecasts let-roots="roots" let-even="even">
-  <ul class="list-group list-group-flush list-group-models">
+<ng-template #models let-forecasts let-roots="roots" let-even="even" let-scrollKey="scrollKey" let-shifted="shifted">
+  <ul class="list-group list-group-flush list-group-models" [ngClass]="{'list-group-shifted': shifted}"
+    restoreScrollPosition [scrollTopRatio]="scrollPostionStore[scrollKey]"
+    (scrollTopRatioChanged)="storeScrollPosition(scrollKey, $event)">
     <li *ngIf="!forecasts || forecasts.length === 0" class="list-group-item">No forecasts for
       current selection available :(</li>
     <li *ngFor="let forecast of forecasts" class="list-group-item list-group-forecast-item"
@@ -96,9 +97,6 @@
         <span class="ml-1 mr-auto text-truncate forecast-title"
           [title]="forecast.model.name">{{forecast.model.name}}</span>
         <fa-icon [icon]="forecast.enabled ? icons.visible : icons.invisible"></fa-icon>
-        <!-- <span *ngIf="forecast.hasSeries">I HAVE SERIES DATA!!!</span> -->
-        <!-- <fa-icon *ngIf="forecast.adjust" class="mx-1 forecast-icon" [icon]="icons.adjusted"
-          title="This model doesn't belong to this datasource - it's adjusted."></fa-icon> -->
       </div>
     </li>
   </ul>
