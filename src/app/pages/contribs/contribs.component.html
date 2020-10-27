@@ -1,4 +1,4 @@
-﻿<div class="container">
+<div class="container">
   <h3 class="display-3">Contributors</h3>
 
   <p>The German and Polish COVID-19 Forecast Hub is a collaborative effort based on work from a large number of research
@@ -11,7 +11,8 @@
       <div class="card h-100">
         <div class="card-body">
           <h5 class="card-title"><a target="_blank" [attr.href]="cont.link">{{cont.name}}</a></h5>
-          <p class="card-text">{{cont.method}}</p>
+          <p class="card-text"><i>{{cont.model_name}}</i></p>
+          <p class="card-text">{{cont.method}}<a target="_blank" [attr.href]="cont.paper_url"> {{cont.paper_text}}</a></p>
         </div>
         <!-- <div class="card-footer">
           <small class="text-muted"><a target="_blank" [attr.href]="cont.link">more...</a></small>
