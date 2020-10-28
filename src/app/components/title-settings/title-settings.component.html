@@ -150,9 +150,9 @@
       <div class="col-6">
         <div class="row form-group" style="margin-bottom: 0;">
           <ng-container *ngIf="displayMode$ | async as displayMode">
-            <label class="col-xl-4 col-form-label label-text" title="Show forecast by">
+            <label class="col-xl-4 col-form-label label-text" title="Show forecast by" style="overflow: visible;">
               Show forecast by
-              <fa-icon [icon]="icons.help" [ngbTooltip]="helpForecastBy" container="body"></fa-icon>
+              <fa-icon [icon]="icons.help" [ngbTooltip]="helpForecastBy" ></fa-icon>
             </label>
             <div class="col-xl-8">
               <div ngbRadioGroup class="btn-group btn-group-toggle" [ngModel]="displayMode.mode.$type"
