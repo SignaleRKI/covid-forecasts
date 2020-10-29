@@ -1,8 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { TruthToPlotSource, TruthToPlotValue } from 'src/app/models/truth-to-plot';
 import { LookupService } from 'src/app/services/lookup.service';
 import { combineLatest, interval, noop, Observable, Subscription } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { ForecastDateLookup } from 'src/app/models/lookups';
 import { ForecastDateDisplayMode, ForecastDisplayMode, ForecastHorizonDisplayMode, ForecastPlotService } from 'src/app/services/forecast-plot.service';
@@ -10,13 +10,14 @@ import { QuantileType } from 'src/app/models/forecast-to-plot';
 import { faAngleLeft, faAngleRight, faArrowLeft, faArrowRight, faPause, faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-title-settings',
   templateUrl: './title-settings.component.html',
   styleUrls: ['./title-settings.component.scss']
 })
-export class TitleSettingsComponent implements OnInit {
+export class TitleSettingsComponent implements OnInit, OnDestroy {
   TruthToPlotValue = TruthToPlotValue;
   plotValue$: Observable<TruthToPlotValue>;
 
@@ -40,7 +41,17 @@ export class TitleSettingsComponent implements OnInit {
     help: faQuestionCircle
   };
 
-  constructor(private lookupService: LookupService, private stateService: ForecastPlotService) {
+  private routerSub: Subscription;
+
+  constructor(private lookupService: LookupService, private stateService: ForecastPlotService, private router: Router) {
+    // this.routerSub = router.events.pipe(filter(event => event instanceof NavigationEnd))
+    //   .subscribe(event => { this.stopForecastDate(); });
+  }
+  ngOnDestroy(): void {
+    // this.routerSub.unsubscribe();
+
+
+    this.stopForecastDate();
   }
 
   ngOnInit(): void {
@@ -106,7 +117,14 @@ export class TitleSettingsComponent implements OnInit {
 
       let d = currentDate;
       this.player = interval(1000).subscribe((interval) => {
-        d = this.changeForecastDateByDir('prev', forecastDates, d);
+        if(forecastDates.maximum.isSame(d)){
+          this.changeForecastDate(this.forecastDateBeforePlayer);
+          d = moment(this.forecastDateBeforePlayer);
+        }
+        else{
+          d = this.changeForecastDateByDir('prev', forecastDates, d);
+        }
+
       });
     } else {
       this.player.unsubscribe();
@@ -114,10 +132,14 @@ export class TitleSettingsComponent implements OnInit {
   }
 
   stopForecastDate() {
-    this.isPlayingForecastDate = false;
-    this.player.unsubscribe();
-    this.changeForecastDate(this.forecastDateBeforePlayer);
-    this.forecastDateBeforePlayer = null;
+    if (this.isPlayingForecastDate) {
+      this.isPlayingForecastDate = false;
+      if (this.player) {
+        this.player.unsubscribe();
+      }
+      this.changeForecastDate(this.forecastDateBeforePlayer);
+      this.forecastDateBeforePlayer = null;
+    }
   }
 
 }

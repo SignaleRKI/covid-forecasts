@@ -5,9 +5,9 @@ import { map } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { SeriesInfo, DataSourceSeriesInfo, ForecastSeriesInfo, ModelInfo } from 'src/app/models/series-info';
 import { TruthToPlotSource, TruthToPlotValue } from 'src/app/models/truth-to-plot';
-import { faChevronLeft, faChevronRight, faExclamationTriangle, faEye, faEyeSlash, faIndent, faOutdent } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faExclamationTriangle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { LocationLookupItem } from 'src/app/models/lookups';
-import { RestoreScrollPositionDirective } from 'src/app/directives/restore-scroll-position.directive';
 
 type LegendItem = ForecastLegendItem | DataSourceLegendItem;
 
@@ -44,7 +44,8 @@ export class LegendComponent implements OnInit, AfterViewInit {
     right: faChevronRight,
     adjusted: faExclamationTriangle,
     visible: faEye,
-    invisible: faEyeSlash
+    invisible: faEyeSlash,
+    help: faQuestionCircle
   }
 
   scrollPostionStore = new Map<string, number>();
@@ -52,8 +53,7 @@ export class LegendComponent implements OnInit, AfterViewInit {
   constructor(private stateService: ForecastPlotService) { }
 
   ngOnInit(): void {
-    console.log("INIT LEGEND");
-    this.dataContext$ = combineLatest([this.stateService.series$, this.stateService.availableModels$, this.stateService.enabledSeriesNames$, this.stateService.allModelNames$])
+    this.dataContext$ = combineLatest([this.stateService.series$, this.stateService.availableModels$, this.stateService.enabledModelNames$, this.stateService.allModelNames$])
       .pipe(map(([series, availableModels, enabledSeriesNames, allModelNames]) => {
         return {
           plotValue: series.settings.plotValue,
@@ -96,12 +96,12 @@ export class LegendComponent implements OnInit, AfterViewInit {
     return _.map(dataSourceSeries, x => {
       const ownModels = _.filter(availableModels, m => m.source === x.model.source);
       const shiftedForecasts = shiftTo && this.createForecastLegendItems(_.without(availableModels, ...ownModels), forecastSeries, enabledSeriesNames);
-      const isEnabled = enabledSeriesNames && enabledSeriesNames.indexOf(x.model.name) > -1;
+      // const isEnabled = enabledSeriesNames && enabledSeriesNames.indexOf(x.model.name) > -1;
 
       return {
         $type: 'DataSourceLegendItem',
         model: x.model,
-        enabled: isEnabled,
+        enabled: true,
         forecasts: this.createForecastLegendItems(ownModels, forecastSeries, enabledSeriesNames),
         shiftedForecasts: shiftedForecasts && shiftedForecasts.length > 0 && { forecasts: shiftedForecasts, origin: _.head(shiftedForecasts).model.source }
       };
@@ -122,19 +122,18 @@ export class LegendComponent implements OnInit, AfterViewInit {
 
   toggleEnabled(item: LegendItem, dsItems: DataSourceLegendItem[]) {
     item.enabled = !item.enabled
-    if (item.$type === 'DataSourceLegendItem') {
-      item.forecasts.concat(item.shiftedForecasts ? item.shiftedForecasts.forecasts : []).forEach(x => x.enabled = item.enabled);
-    }
-    if (item.$type === 'ForecastLegendItem' && item.enabled) {
-      const parent = _.find(dsItems, d => d.forecasts.indexOf(item) > -1 || d.shiftedForecasts.forecasts.indexOf(item) > -1);
-      parent.enabled = true;
-    }
 
-    this.stateService.enabledSeriesNames = this._collectEnabledModels(dsItems).map(x => x.name);
+    // if (item.$type === 'ForecastLegendItem' && item.enabled) {
+    //   const parent = _.find(dsItems, d => d.forecasts.indexOf(item) > -1 || d.shiftedForecasts.forecasts.indexOf(item) > -1);
+    //   parent.enabled = true;
+    // }
+
+    const enabledModelnames = item.enabled ? [item.model.name].concat(this.stateService.enabledModelNames) : this.stateService.enabledModelNames.filter(x => x !== item.model.name);
+    this.stateService.enabledModelNames = enabledModelnames;
   }
 
-  changeWhiteListing(blacklist: string[]) {
-    this.stateService.enabledSeriesNames = blacklist || [];
+  changeWhiteListing(whitelist: string[]) {
+    this.stateService.enabledModelNames = whitelist || [];
   }
 
   changePlotValue(plotValue: TruthToPlotValue) {
@@ -145,12 +144,12 @@ export class LegendComponent implements OnInit, AfterViewInit {
     this.stateService.userLocation = location;
   }
 
-  private _collectEnabledModels(rootItems: DataSourceLegendItem[]): ModelInfo[] {
-    try {
-      return _.filter(_.flatMap(rootItems, x => [<LegendItem>x].concat(x.forecasts).concat(x.shiftedForecasts ? x.shiftedForecasts.forecasts : [])), x => x.enabled).map(x => x.model);
-    } catch (error) {
-      return null;
-    }
+  // private _collectEnabledModels(rootItems: DataSourceLegendItem[]): ModelInfo[] {
+  //   try {
+  //     return _.filter(_.flatMap(rootItems, x => [<LegendItem>x].concat(x.forecasts).concat(x.shiftedForecasts ? x.shiftedForecasts.forecasts : [])), x => x.enabled).map(x => x.model);
+  //   } catch (error) {
+  //     return null;
+  //   }
 
-  }
+  // }
 }

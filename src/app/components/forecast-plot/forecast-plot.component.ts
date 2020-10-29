@@ -305,6 +305,10 @@ export class ForecastPlotComponent implements OnInit, OnDestroy {
           line.lineStyle = { color: x.model.style.color };
         }
 
+        if(x.$type === 'DataSourceSeriesInfo') {
+          line.z = 5;
+        }
+
         const band = this._createConfidenceBand(x);
 
         return [line, ...band];

@@ -10,6 +10,26 @@ Visit the site at [GitHub pages](https://signalerki.github.io/covid-forecasts)
 
 ### TODO
 
+- ~~Legende~~
+  - ~~Kein Klick mehr auf Truth möglich (nur hovern)~~
+  - ~~Selection mit ? und Erkärungstext~~
+  - ~~Header für Forecasts, wie bei shiftedModels~~
+  - ~~Header der shiftedModels umschreiben zu: "Forecast models..."~~
+  - ~~Selection checken, ob alles richtig funktioniert~~
+- ~~Zeitanimation~~
+  - ~~Bei Seitenwechsel Animation stoppen~~
+  - ~~Am Ende stoppen und nicht von vorne beginnen~~
+- ~~Es werden nur noch Forecasts gefiltert und nicht mehr die Truthdaten => Truthdaten immer sichtbar~~
+  - ~~Anpassungen Whitelisting/Filterung~~
+  - ~~Anpassungen Legende~~
+- ~~Prediction Interval hat falschen Tooltip~~
+- ~~Plot~~
+  - ~~TruthPoints über ForecastPoints anzeigen~~
+
+## 27.10.2020
+
+### TODO
+
 #### Misc
 
 - Link aus Email einbauen

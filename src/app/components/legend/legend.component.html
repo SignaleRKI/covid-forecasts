@@ -1,7 +1,9 @@
 <ng-container *ngIf="dataContext$ | async as dataContext">
 
   <div class="row form-group">
-    <label class="col-auto col-form-label">Selection</label>
+    <label class="col-auto col-form-label">Selection
+      <fa-icon [icon]="icons.help" [ngbTooltip]="helpSelection"></fa-icon>
+    </label>
     <div class="col-auto">
       <div class="btn-group btn-group-sm ml-auto">
         <button class="btn btn-secondary" (click)="changeWhiteListing([])">
@@ -44,22 +46,24 @@
     <div class="col" *ngFor="let item of dataContext.items; let even = even;">
       <div class="card">
         <div class="card-header card-header-datasource" [ngClass]="{'datasource-disabled': !item.enabled}"
-          (mouseleave)="onMouseOver(null)" (mouseover)="onMouseOver(item, dataContext.items)"
-          (click)="toggleEnabled(item, dataContext.items)">
+          (mouseleave)="onMouseOver(null)" (mouseover)="onMouseOver(item, dataContext.items)">
           <div class="d-flex align-items-center">
             <ng-container *ngTemplateOutlet="icon; context: {$implicit: item}">
             </ng-container>
             <span class="ml-1 mr-auto font-weight-bold text-truncate datasource-title" [title]="item.model.name">Truth
               {{ item.model.name }}</span>
-            <fa-icon [icon]="item.enabled ? icons.visible : icons.invisible"></fa-icon>
+            <!-- <fa-icon [icon]="item.enabled ? icons.visible : icons.invisible"></fa-icon> -->
           </div>
+        </div>
+        <div class="card-footer">
+          Forecast models
         </div>
         <ng-container
           *ngTemplateOutlet="models; context: {$implicit: item.forecasts, roots: dataContext.items, scrollKey: item.model.name + '_forecasts', shifted: false }">
         </ng-container>
         <ng-container *ngIf="item.shiftedForecasts">
           <div class="card-footer">
-            Models orignally based on {{item.shiftedForecasts.origin | labelTruthToPlotSource}} data
+            Forecast models orignally based on {{item.shiftedForecasts.origin | labelTruthToPlotSource}} data
           </div>
           <ng-container
             *ngTemplateOutlet="models; context: {$implicit: item.shiftedForecasts.forecasts,roots: dataContext.items, scrollKey: item.model.name + '_shiftedForecasts', shifted: true}">
@@ -71,7 +75,6 @@
 </ng-container>
 
 <ng-template #icon let-item>
-  <!-- <code>{{item | json}}</code> -->
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="d-block legend-icon shrink-0"
     [ngSwitch]="item.model.style.symbol">
     <polygon points="8,2 14,14 2,14" *ngSwitchCase="'triangle'" [attr.stroke-width]="2"
@@ -100,4 +103,11 @@
       </div>
     </li>
   </ul>
+</ng-template>
+
+<ng-template #helpSelection>
+  <span style="min-width: 180px; display: block;">
+    You can select or unselect models by clicking on them in the legend. By clicking on "None", "All" or "Ensemble" you
+    can select all of the models, none or only the median ensemble forecast.
+  </span>
 </ng-template>

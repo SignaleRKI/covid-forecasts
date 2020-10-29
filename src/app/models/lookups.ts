@@ -55,10 +55,19 @@ export class ForecastDateLookup {
     let dateUpdate = this.maximum;
     const index = this.getIndex(from);
     if (index >= 0) {
-      const newIndex = dir === 'next'
-        ? (index + 1) % this.items.length
-        : (index - 1 < 0 ? this.items.length - 1 : index - 1);
-      dateUpdate = this.items[newIndex];
+      // const newIndex = dir === 'next'
+      //   ? (index + 1) % this.items.length
+      //   : (index - 1 < 0 ? this.items.length - 1 : index - 1);
+      const newIndex = dir === 'next' ? index + 1 : index - 1;
+      if (newIndex < 0) {
+        dateUpdate = this.maximum;
+      }
+      else if (newIndex >= this.items.length - 1) {
+        dateUpdate = this.minimum;
+      }
+      else {
+        dateUpdate = this.items[newIndex];
+      }
     }
     return dateUpdate;
   }
