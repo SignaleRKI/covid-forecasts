@@ -52,10 +52,11 @@ export type ForecastDisplayMode = ForecastHorizonDisplayMode | ForecastDateDispl
 export class ForecastPlotService implements OnDestroy {
 
   static EnsembleModelNames = ['KITCOVIDhub-median_ensemble'];
+  static DefaultModelNames = ['IHME-CurveFit', 'LeipzigIMISE-SECIR', 'USC-SIkJalpha'];
 
   private readonly _highlightedSeries = new BehaviorSubject<ModelInfo[]>(null);
   private readonly _plotValue = new BehaviorSubject<TruthToPlotValue>(TruthToPlotValue.CumulatedDeath);
-  private readonly _enabledModelNames = new BehaviorSubject<string[]>(null);
+  private readonly _enabledModelNames = new BehaviorSubject<string[]>(ForecastPlotService.DefaultModelNames);
   private readonly _confidenceInterval = new BehaviorSubject<QuantileType>(QuantileType.Q95);
   private readonly _shiftToSource = new BehaviorSubject<TruthToPlotSource>(null);
   private readonly _userLocation = new BehaviorSubject<LocationLookupItem>(undefined);
@@ -169,11 +170,11 @@ export class ForecastPlotService implements OnDestroy {
 
     this.allModelNames$ = this.dataService.forecasts$
       .pipe(map(x => _.uniqBy(x, f => f.model).map(f => f.model)))
-      .pipe(tap(x => {
-        if (this.enabledModelNames === null) {
-          this.enabledModelNames = x;
-        }
-      }))
+      // .pipe(tap(x => {
+      //   if (this.enabledModelNames === null) {
+      //     this.enabledModelNames = x;
+      //   }
+      // }))
       .pipe(shareReplay(1));
 
     const datasourceSeries$ = combineLatest([this.dataSources$, this.datasourceSettings$])
