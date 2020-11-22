@@ -63,7 +63,7 @@
         </ng-container>
         <ng-container *ngIf="item.shiftedForecasts">
           <div class="card-footer">
-            Forecast models orignally based on {{item.shiftedForecasts.origin | labelTruthToPlotSource}} data
+            Forecast models originally based on {{item.shiftedForecasts.origin | labelTruthToPlotSource}} data
           </div>
           <ng-container
             *ngTemplateOutlet="models; context: {$implicit: item.shiftedForecasts.forecasts,roots: dataContext.items, scrollKey: item.model.name + '_shiftedForecasts', shifted: true}">
