@@ -31,6 +31,7 @@ import { LabelTruthToPlotSourcePipe } from './pipes/label-truth-to-plot-source.p
 import { LabelTruthToPlotValuePipe } from './pipes/label-truth-to-plot-value.pipe';
 import { ContribsComponent } from './pages/contribs/contribs.component';
 import { RestoreScrollPositionDirective } from './directives/restore-scroll-position.directive';
+import { ResearchEvaluationComponent } from './pages/research-evaluation/research-evaluation.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { RestoreScrollPositionDirective } from './directives/restore-scroll-posi
     TutorialPlotForecastDescriptionComponent,
     LabelTruthToPlotSourcePipe,
     LabelTruthToPlotValuePipe,
-    RestoreScrollPositionDirective
+    RestoreScrollPositionDirective,
+    ResearchEvaluationComponent
   ],
   imports: [
     BrowserModule,

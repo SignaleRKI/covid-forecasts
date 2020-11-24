@@ -75,7 +75,7 @@ export class LegendComponent implements OnInit, AfterViewInit {
 
   private createForecastLegendItems(forecastModels: ModelInfo[], forecastSeries: SeriesInfo[], enabledSeriesNames: string[]) {
     return _.chain(forecastModels)
-      .orderBy(m => m.name)
+      // .orderBy(m => m.name)
       .map(m => {
         const hasSeries = forecastSeries.some(f => f.model.name === m.name && f.data && f.data.length > 0);
         return {
