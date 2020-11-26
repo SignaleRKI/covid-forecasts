@@ -52,7 +52,15 @@ export type ForecastDisplayMode = ForecastHorizonDisplayMode | ForecastDateDispl
 export class ForecastPlotService implements OnDestroy {
 
   static EnsembleModelNames = ['KITCOVIDhub-median_ensemble'];
-  static DefaultModelNames = ['IHME-CurveFit', 'LeipzigIMISE-SECIR', 'USC-SIkJalpha'];
+  static DefaultModelNames = ['Imperial-ensemble1', 'Imperial-ensemble2', 'YYG-ParamSearch',
+       'MIT_CovidAnalytics-DELPHI', 'Geneva-DeterministicGrowth',
+       'LANL-GrowthRate', 'KIT-baseline', 'JGU_UHH-SMM',
+       'LeipzigIMISE-SECIR', 'FIAS_FZJ-Epi1Ger', 'IHME-CurveFit',
+       'KITCOVIDhub-mean_ensemble', 'KITCOVIDhub-median_ensemble',
+       'USC-SIkJalpha', 'ICM-agentModel', 'MOCOS-agent1', 'UCLA-SuEIR',
+       'ITWW-county_repro',
+       'KITCOVIDhub-inverse_wis_ensemble', 'epiforecasts-EpiExpert',
+       'epiforecasts-EpiNow2']; //'KIT-time_series_baseline'
 
   private readonly _highlightedSeries = new BehaviorSubject<ModelInfo[]>(null);
   private readonly _plotValue = new BehaviorSubject<TruthToPlotValue>(TruthToPlotValue.CumulatedDeath);
