@@ -83,7 +83,7 @@ export class TitleSettingsComponent implements OnInit, OnDestroy {
       newDisplayMode.showForecastsUpTo = upTo;
       this.stateService.userDisplayMode = newDisplayMode;
     }else{
-      this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: forecastDate, showForecastsUpTo: 2 };
+      this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: forecastDate, showForecastsUpTo: upTo };
     }
   }
 
