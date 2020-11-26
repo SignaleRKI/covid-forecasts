@@ -17,13 +17,5 @@
     > div {
       max-height: 100%;
     }
-
-    ::ng-deep .legend-row {
-      flex-wrap: nowrap;
-      max-height: calc(100% - 54px);
-      .card {
-        max-height: 100%;
-      }
-    }
   }
 }
