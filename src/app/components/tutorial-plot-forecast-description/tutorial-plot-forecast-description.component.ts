@@ -18,11 +18,11 @@ export class TutorialPlotForecastDescriptionComponent implements OnInit {
     this.maxDate$ = this.lookupService.forecastDates$.pipe(map(x => x.maximum));
   }
 
-  changeDisplayModeToHorizon(){
-    this.stateService.userDisplayMode = { $type: 'ForecastHorizonDisplayMode', horizon: 1 };
-  }
+  // changeDisplayModeToHorizon(){
+  //   this.stateService.userDisplayMode = { $type: 'ForecastHorizonDisplayMode', horizon: 1 };
+  // }
 
-  changeDisplayModeToDate(date: moment.Moment){
-    this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: date };
-  }
+  // changeDisplayModeToDate(date: moment.Moment){
+  //   this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: date };
+  // }
 }

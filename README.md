@@ -10,6 +10,16 @@ Visit the site at [GitHub pages](https://signalerki.github.io/covid-forecasts)
 
 ### TODO
 
+- ~~Neue RadioButtons: 'show forecasts up to' 1, 2, 3, 4 Weeks, dahin wo jetzt 'show forecast by' ist~~
+  - ~~'Shift forecasts' zu model selektion (legende)~~
+  - ~~show forecastby hoch schieben, wo vorher 'shift forecast to' war~~
+- ~~Legende nicht mehr sortieren, so dass sortierung aus datei beibehalten wird~~
+- ~~contribs array auslagern und in legende nutzen um tooltip text zu erweitern mit `${model.name}: {$model.description}`~~
+
+## 24.11.2020
+
+### TODO
+
 - ~~Legende~~
   - ~~Kein Klick mehr auf Truth möglich (nur hovern)~~
   - ~~Selection mit ? und Erkärungstext~~

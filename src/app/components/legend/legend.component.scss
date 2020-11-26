@@ -16,6 +16,16 @@
   width: 16px;
 }
 
+@include media-breakpoint-up(lg) {
+  .legend-row {
+    flex-wrap: nowrap;
+    max-height: calc(100% - 78px);
+    .card {
+      max-height: 100%;
+    }
+  }
+}
+
 .list-group-forecast-item {
   cursor: pointer;
 

@@ -61,8 +61,11 @@
               </div>
             </div>
           </div>
+
+
           <div class="col-6 col-md-12">
-            <div class="row form-group">
+            <!-- removeSTART and add to legend; add forecastBy here -->
+            <!-- <div class="row form-group">
               <label class="col-xl-4 col-form-label d-flex">
                 <span class="label-text-with-icon mr-1" title="Shift forecasts to">Shift forecasts to</span>
                 <fa-icon [icon]="icons.help" [ngbTooltip]="helpShift"></fa-icon>
@@ -83,22 +86,51 @@
                   </label>
                 </div>
               </div>
+            </div> -->
+            <!-- removeEND -->
+            <div class="row form-group">
+              <ng-container *ngIf="displayMode$ | async as displayMode">
+                <!-- <label class="col-xl-4 col-form-label label-text" title="Show forecast by" style="overflow: visible;">
+                  Show forecast by
+                  <fa-icon [icon]="icons.help" [ngbTooltip]="helpForecastBy"></fa-icon>
+                </label> -->
+                <label class="col-xl-4 col-form-label d-flex" style="overflow: visible;">
+                  <span class="label-text-with-icon mr-1" title="Show forecast by">Show forecast by</span>
+                  <fa-icon [icon]="icons.help" [ngbTooltip]="helpForecastBy"></fa-icon>
+                </label>
+
+                <div class="col-xl-8">
+                  <div ngbRadioGroup class="btn-group btn-group-toggle" [ngModel]="displayMode.mode.$type"
+                    (ngModelChange)="changeDisplayMode($event, displayMode.availableDates.maximum)">
+                    <label ngbButtonLabel class="btn-secondary">
+                      <input ngbButton type="radio" value="ForecastDateDisplayMode"> Date
+                    </label>
+                    <label ngbButtonLabel class="btn-secondary">
+                      <input ngbButton type="radio" value="ForecastHorizonDisplayMode"> Horizon
+                    </label>
+                  </div>
+                </div>
+              </ng-container>
             </div>
+
           </div>
+
+
         </div>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="displayMode$ | async as displayMode">
       <div class="col-6">
-        <ng-container *ngIf="displayMode$ | async as displayMode">
+        <ng-container>
           <div class="row form-group" style="margin-bottom: 0;"
             *ngIf="displayMode.mode.$type === 'ForecastDateDisplayMode'">
             <label class="col-xl-3 col-form-label label-text" title="Forecast date">Forecast date</label>
             <div class="col-xl-9">
               <div class="btn-toolbar">
                 <div class="btn-group mr-1 mb-1">
-                  <button class="btn btn-secondary" [disabled]="isPlayingForecastDate || displayMode.availableDates.minimum.isSame($any(displayMode.mode).date)"
+                  <button class="btn btn-secondary"
+                    [disabled]="isPlayingForecastDate || displayMode.availableDates.minimum.isSame($any(displayMode.mode).date)"
                     (click)="changeForecastDateByDir('next', displayMode.availableDates, $any(displayMode.mode).date)">
                     <fa-icon [icon]="icons.left"></fa-icon>
                   </button>
@@ -110,13 +142,15 @@
                         (click)="changeForecastDate(date)">{{date | date}}</button>
                     </div>
                   </div>
-                  <button class="btn btn-secondary" [disabled]="isPlayingForecastDate || displayMode.availableDates.maximum.isSame($any(displayMode.mode).date)"
+                  <button class="btn btn-secondary"
+                    [disabled]="isPlayingForecastDate || displayMode.availableDates.maximum.isSame($any(displayMode.mode).date)"
                     (click)="changeForecastDateByDir('prev', displayMode.availableDates, $any(displayMode.mode).date)">
                     <fa-icon [icon]="icons.right"></fa-icon>
                   </button>
                 </div>
                 <div class="btn-group mb-1">
-                  <button class="btn btn-secondary" [disabled]="$any(displayMode.mode).date.isSame(displayMode.availableDates.maximum) && !isPlayingForecastDate"
+                  <button class="btn btn-secondary"
+                    [disabled]="$any(displayMode.mode).date.isSame(displayMode.availableDates.maximum) && !isPlayingForecastDate"
                     (click)="playPauseForecastDate(displayMode.availableDates, $any(displayMode.mode).date)">
                     <fa-icon [icon]="isPlayingForecastDate ? icons.pause : icons.play"></fa-icon>
                   </button>
@@ -148,34 +182,38 @@
         </ng-container>
       </div>
       <div class="col-6">
-        <div class="row form-group" style="margin-bottom: 0;">
-          <ng-container *ngIf="displayMode$ | async as displayMode">
-            <label class="col-xl-4 col-form-label label-text" title="Show forecast by" style="overflow: visible;">
-              Show forecast by
-              <fa-icon [icon]="icons.help" [ngbTooltip]="helpForecastBy" ></fa-icon>
-            </label>
-            <div class="col-xl-8">
-              <div ngbRadioGroup class="btn-group btn-group-toggle" [ngModel]="displayMode.mode.$type"
-                (ngModelChange)="changeDisplayMode($event, displayMode.availableDates.maximum)">
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="ForecastDateDisplayMode"> Date
-                </label>
-                <label ngbButtonLabel class="btn-secondary">
-                  <input ngbButton type="radio" value="ForecastHorizonDisplayMode"> Horizon
-                </label>
-              </div>
+        <div class="row form-group" style="margin-bottom: 0;"
+          *ngIf="displayMode.mode.$type === 'ForecastDateDisplayMode'">
+          <label class="col-xl-4 col-form-label d-flex" style="overflow: visible;">
+            <span class="label-text-with-icon mr-1" title="Show forecast up to">Show forecast up to</span>
+            <fa-icon [icon]="icons.help" [ngbTooltip]="helpShowUpTo"></fa-icon>
+          </label>
+
+          <div class="col-xl-8">
+            <div class="btn-group btn-group-toggle" ngbRadioGroup
+              (ngModelChange)="changeShowForecastsUpTo($event, displayMode.availableDates.maximum)"
+              [ngModel]="$any(displayMode.mode).showForecastsUpTo">
+              <label ngbButtonLabel class="btn-secondary" title="1 Week">
+                <input ngbButton type="radio" [value]="1"> 1 Wk
+              </label>
+              <label ngbButtonLabel class="btn-secondary" title="2 Weeks">
+                <input ngbButton type="radio" [value]="2"> 2 Wks
+              </label>
+              <label ngbButtonLabel class="btn-secondary" title="3 Weeks">
+                <input ngbButton type="radio" [value]="3"> 3 Wks
+              </label>
+              <label ngbButtonLabel class="btn-secondary" title="4 Weeks">
+                <input ngbButton type="radio" [value]="4"> 4 Wks
+              </label>
             </div>
-          </ng-container>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<ng-template #helpShift>Some modellers aim to forecast cases and deaths according to ECDC data, others according to data
-  from Johns Hopkins University. For cumulative forecasts it can be helpful to align all forecasts with the same data to
-  improve comparability. You can do this by selecting a truth data source here.
-</ng-template>
+
 <ng-template #helpCi>Forecasts always come with some uncertainty. Forecasters can therefore specify intervals which
   shall cover the true value with 50% or 95% probability. Note that not all forecasters make such intervals available.
 </ng-template>
@@ -184,6 +222,11 @@
   incident (new cases or deaths) or cumulative (total cases or deaths) scale.
 </ng-template>
 <ng-template #helpForecastBy>
-  You can either look at one through four-week-ahead forecasts made at a specific time point or show all forecasts for a
+  You can either look at one through four-week-ahead forecasts made at a specific time point or show all forecasts for
+  a
   specific forecast horizon.
 </ng-template>
+<ng-template #helpShowUpTo>Teams provide predictions up to four weeks into the future but these become less informative
+  and less
+  reliable for large forecast horizons. For cases, forecats beyond two weeks may be thrown off by new intervention
+  measures. We therefore only show one and two week ahead forecasts by default.</ng-template>

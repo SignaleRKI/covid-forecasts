@@ -35,6 +35,7 @@ export interface ForecastHorizonDisplayMode {
 export interface ForecastDateDisplayMode {
   $type: 'ForecastDateDisplayMode';
   date: moment.Moment;
+  showForecastsUpTo: 1 | 2 | 3 | 4;
 }
 
 // export enum ForecastShiftMode {
@@ -162,7 +163,7 @@ export class ForecastPlotService implements OnDestroy {
 
     this.displayMode$ = combineLatest([this.userDisplayMode$, this.lookupService.forecastDates$])
       .pipe(map(([userDisplayMode, defaultDisplayMode]) => {
-        return userDisplayMode !== undefined ? userDisplayMode : { $type: 'ForecastDateDisplayMode', date: defaultDisplayMode.maximum } as ForecastDateDisplayMode;
+        return userDisplayMode !== undefined ? userDisplayMode : { $type: 'ForecastDateDisplayMode', date: defaultDisplayMode.maximum, showForecastsUpTo: 2 } as ForecastDateDisplayMode;
       })).pipe(shareReplay(1));
 
     this.datasourceSettings$ = combineLatest([this.location$, this.plotValue$, this.shiftToSource$])
@@ -198,7 +199,11 @@ export class ForecastPlotService implements OnDestroy {
 
     const filteredForecasts$ = combineLatest([this.dataService.forecasts$, forecastSettings$])
       .pipe(map(([data, settings]) => {
-        const d = (!settings.location || !settings.plotValue) ? [] : _.filter(data, x => x.location === settings.location.id && x.target.value_type === settings.plotValue);
+        const filterPredicate: (x: ForecastToPlot) => boolean = settings.displayMode.$type === 'ForecastDateDisplayMode'
+          ? x => x.location === settings.location.id && x.target.value_type === settings.plotValue && x.target.time_ahead <= (<ForecastDateDisplayMode>settings.displayMode).showForecastsUpTo
+          : x => x.location === settings.location.id && x.target.value_type === settings.plotValue;
+        const d = (!settings.location || !settings.plotValue) ? [] : _.filter(data, filterPredicate);
+
         return [d, settings] as [ForecastToPlot[], ForecastSettings];
       })).pipe(shareReplay(1));
 

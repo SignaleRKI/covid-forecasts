@@ -1,23 +1,50 @@
 <ng-container *ngIf="dataContext$ | async as dataContext">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-inline">
+        <div class="d-inline-flex flex-row mr-3 mb-2" style="max-width: 100%;">
+          <label class="mr-1" style="overflow: hidden; flex: 0; flex-basis: auto;">
+            <span title="Selection" class="text-truncate mr-1">Selection</span>
+            <fa-icon [icon]="icons.help" [ngbTooltip]="helpSelection"></fa-icon>
+          </label>
+          <div class="btn-group btn-group-sm" style="flex: 1;">
+            <button class="btn btn-secondary" (click)="changeWhiteListing([])">
+              None
+            </button>
+            <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.allModelNames)">
+              All
+            </button>
+            <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.ensembleModelNames)">
+              Ensemble
+            </button>
+          </div>
+        </div>
 
-  <div class="row form-group">
-    <label class="col-auto col-form-label">Selection
-      <fa-icon [icon]="icons.help" [ngbTooltip]="helpSelection"></fa-icon>
-    </label>
-    <div class="col-auto">
-      <div class="btn-group btn-group-sm ml-auto">
-        <button class="btn btn-secondary" (click)="changeWhiteListing([])">
-          None
-        </button>
-        <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.allModelNames)">
-          All
-        </button>
-        <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.ensembleModelNames)">
-          Ensemble
-        </button>
+        <div class="d-inline-flex flex-row mb-2" style="max-width: 100%;">
+          <label class="mr-1" style="overflow: hidden; flex: 0; flex-basis: auto;">
+            <span title="Shift forecasts to" class="text-truncate mr-1">Shift forecasts to</span>
+            <fa-icon [icon]="icons.help" [ngbTooltip]="helpShift"></fa-icon>
+          </label>
+          <div class="btn-group btn-group-toggle btn-group-sm" style="flex: 1;" ngbRadioGroup
+            (ngModelChange)="changeShiftToSource($event)" [ngModel]="dataContext.shiftToSource">
+            <label ngbButtonLabel class="btn-secondary">
+              <input ngbButton type="radio" [value]="null"> None
+            </label>
+            <label ngbButtonLabel class="btn-secondary">
+              <input ngbButton type="radio" [value]="TruthToPlotSource.ECDC">
+              {{TruthToPlotSource.ECDC | labelTruthToPlotSource}}
+            </label>
+            <label ngbButtonLabel class="btn-secondary">
+              <input ngbButton type="radio" [value]="TruthToPlotSource.JHU">
+              {{TruthToPlotSource.JHU | labelTruthToPlotSource}}
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+
 
   <div class="alert alert-secondary" *ngIf="dataContext.items.length === 0">
     <h4 class="alert-heading">No datasource or models available</h4>
@@ -52,10 +79,9 @@
             </ng-container>
             <span class="ml-1 mr-auto font-weight-bold text-truncate datasource-title" [title]="item.model.name">Truth
               {{ item.model.name }}</span>
-            <!-- <fa-icon [icon]="item.enabled ? icons.visible : icons.invisible"></fa-icon> -->
           </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer text-truncate" style="min-height: 49px;">
           Forecast models
         </div>
         <ng-container
@@ -98,7 +124,7 @@
         <ng-container *ngTemplateOutlet="icon; context: {$implicit: forecast}">
         </ng-container>
         <span class="ml-1 mr-auto text-truncate forecast-title"
-          [title]="forecast.model.name">{{forecast.model.name}}</span>
+          [title]="forecast.tooltipText">{{forecast.model.name}}</span>
         <fa-icon [icon]="forecast.enabled ? icons.visible : icons.invisible"></fa-icon>
       </div>
     </li>
@@ -110,4 +136,11 @@
     You can select or unselect models by clicking on them in the legend. By clicking on "None", "All" or "Ensemble" you
     can select all of the models, none or only the median ensemble forecast.
   </span>
+</ng-template>
+
+<ng-template #helpShift>Some modellers aim to forecast cases and deaths according to ECDC data, others according to
+  data
+  from Johns Hopkins University. For cumulative forecasts it can be helpful to align all forecasts with the same data
+  to
+  improve comparability. You can do this by selecting a truth data source here.
 </ng-template>

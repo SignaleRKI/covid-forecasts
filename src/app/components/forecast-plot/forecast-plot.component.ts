@@ -73,10 +73,19 @@ export class ForecastPlotComponent implements OnInit, OnDestroy {
         if (axesInfo?.axisPointerModel?.option) {
           const axisDate = moment(axesInfo.axisPointerModel.option.value);
           const closestDate = dates.getClosest(axisDate);
-          this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: closestDate };
+
+          const newDisplayMode = { ...currentSettings.displayMode, date: closestDate };
+          this.stateService.userDisplayMode = newDisplayMode;
         }
       }
     }
+  }
+
+  onAxisPointerClick(event: any, dates: ForecastDateLookup, currentSettings: ForecastSettings) {
+    const axisDate = moment(event[0]);
+    const closestDate = dates.getClosest(axisDate);
+    const newDisplayMode = { ...currentSettings.displayMode, date: closestDate };
+    this.stateService.userDisplayMode = newDisplayMode;
   }
 
   onDataZoom(event) {
@@ -305,7 +314,7 @@ export class ForecastPlotComponent implements OnInit, OnDestroy {
           line.lineStyle = { color: x.model.style.color };
         }
 
-        if(x.$type === 'DataSourceSeriesInfo') {
+        if (x.$type === 'DataSourceSeriesInfo') {
           line.z = 5;
         }
 

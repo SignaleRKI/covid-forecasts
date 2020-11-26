@@ -8,6 +8,7 @@ import { TruthToPlotSource, TruthToPlotValue } from 'src/app/models/truth-to-plo
 import { faChevronLeft, faChevronRight, faExclamationTriangle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { LocationLookupItem } from 'src/app/models/lookups';
+import { contributorsByModelName } from 'src/app/models/contributors';
 
 type LegendItem = ForecastLegendItem | DataSourceLegendItem;
 
@@ -15,6 +16,7 @@ interface ForecastLegendItem {
   $type: 'ForecastLegendItem';
 
   model: ModelInfo;
+  tooltipText: string;
   enabled: boolean;
   hasSeries: boolean;
 }
@@ -35,7 +37,7 @@ interface DataSourceLegendItem {
   styleUrls: ['./legend.component.scss']
 })
 export class LegendComponent implements OnInit, AfterViewInit {
-  dataContext$: Observable<{ plotValue: TruthToPlotValue, location: LocationLookupItem, ensembleModelNames: string[], allModelNames: string[], items: DataSourceLegendItem[] }>;
+  dataContext$: Observable<{ plotValue: TruthToPlotValue, location: LocationLookupItem, ensembleModelNames: string[], allModelNames: string[], items: DataSourceLegendItem[], shiftToSource: TruthToPlotSource }>;
   TruthToPlotSource = TruthToPlotSource;
   TruthToPlotValue = TruthToPlotValue;
 
@@ -53,12 +55,13 @@ export class LegendComponent implements OnInit, AfterViewInit {
   constructor(private stateService: ForecastPlotService) { }
 
   ngOnInit(): void {
-    this.dataContext$ = combineLatest([this.stateService.series$, this.stateService.availableModels$, this.stateService.enabledModelNames$, this.stateService.allModelNames$])
-      .pipe(map(([series, availableModels, enabledSeriesNames, allModelNames]) => {
+    this.dataContext$ = combineLatest([this.stateService.series$, this.stateService.availableModels$, this.stateService.enabledModelNames$, this.stateService.allModelNames$, this.stateService.shiftToSource$])
+      .pipe(map(([series, availableModels, enabledSeriesNames, allModelNames, shiftToSource]) => {
         return {
           plotValue: series.settings.plotValue,
           location: series.settings.location,
           ensembleModelNames: ForecastPlotService.EnsembleModelNames,
+          shiftToSource: shiftToSource,
           allModelNames: allModelNames,
           items: this._createLegendItems(availableModels, series.data, series.settings.shiftToSource, enabledSeriesNames)
         };
@@ -75,12 +78,19 @@ export class LegendComponent implements OnInit, AfterViewInit {
 
   private createForecastLegendItems(forecastModels: ModelInfo[], forecastSeries: SeriesInfo[], enabledSeriesNames: string[]) {
     return _.chain(forecastModels)
-      .orderBy(m => m.name)
+      // .orderBy(m => m.name)
       .map(m => {
         const hasSeries = forecastSeries.some(f => f.model.name === m.name && f.data && f.data.length > 0);
+        let tooltipText = m.name;
+        if (contributorsByModelName.has(m.name)) {
+          const contrib = contributorsByModelName.get(m.name);
+          tooltipText = `${m.name}: ${contrib.method}`;
+        }
+
         return {
           $type: 'ForecastLegendItem',
           model: m,
+          tooltipText: tooltipText,
           enabled: enabledSeriesNames && enabledSeriesNames.indexOf(m.name) > -1,
           hasSeries: hasSeries
         } as ForecastLegendItem;
@@ -142,6 +152,10 @@ export class LegendComponent implements OnInit, AfterViewInit {
 
   changeLocation(location: LocationLookupItem) {
     this.stateService.userLocation = location;
+  }
+
+  changeShiftToSource(source: TruthToPlotSource) {
+    this.stateService.shiftToSource = source;
   }
 
   // private _collectEnabledModels(rootItems: DataSourceLegendItem[]): ModelInfo[] {

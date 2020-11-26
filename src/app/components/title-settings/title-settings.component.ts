@@ -29,6 +29,8 @@ export class TitleSettingsComponent implements OnInit, OnDestroy {
 
   displayMode$: Observable<{ availableDates: ForecastDateLookup; mode: ForecastDisplayMode; }>;
 
+  showForecastsUpTo$: Observable<1 | 2 | 3 | 4>;
+
   currentDate = new Date();
 
   isPlayingForecastDate: boolean = false;
@@ -75,8 +77,25 @@ export class TitleSettingsComponent implements OnInit, OnDestroy {
     this.stateService.confidenceInterval = qType;
   }
 
+  changeShowForecastsUpTo(upTo: 1 | 2 | 3 | 4, forecastDate: moment.Moment) {
+    if (this.stateService.userDisplayMode && this.stateService.userDisplayMode.$type === 'ForecastDateDisplayMode') {
+      const newDisplayMode = { ...this.stateService.userDisplayMode };
+      newDisplayMode.showForecastsUpTo = upTo;
+      this.stateService.userDisplayMode = newDisplayMode;
+    }else{
+      this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: forecastDate, showForecastsUpTo: upTo };
+    }
+  }
+
   changeForecastDate(forecastDate: moment.Moment) {
-    this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: forecastDate };
+    if (this.stateService.userDisplayMode && this.stateService.userDisplayMode.$type === 'ForecastDateDisplayMode') {
+      const newDisplayMode = { ...this.stateService.userDisplayMode };
+      newDisplayMode.date = forecastDate;
+      this.stateService.userDisplayMode = newDisplayMode;
+    }
+    else {
+      this.stateService.userDisplayMode = { $type: 'ForecastDateDisplayMode', date: forecastDate, showForecastsUpTo: 2 };
+    }
   }
 
   changeForecastHorizon(horizon: 1 | 2 | 3 | 4) {
@@ -117,11 +136,11 @@ export class TitleSettingsComponent implements OnInit, OnDestroy {
 
       let d = currentDate;
       this.player = interval(1000).subscribe((interval) => {
-        if(forecastDates.maximum.isSame(d)){
+        if (forecastDates.maximum.isSame(d)) {
           this.changeForecastDate(this.forecastDateBeforePlayer);
           d = moment(this.forecastDateBeforePlayer);
         }
-        else{
+        else {
           d = this.changeForecastDateByDir('prev', forecastDates, d);
         }
 
