@@ -1,5 +1,53 @@
 <ng-container *ngIf="dataContext$ | async as dataContext">
-  <div class="row">
+
+  <div class="row form-group settings-form-group">
+    <label class="col-5 col-sm-4 col-lg-auto col-form-label d-flex">
+      <span class="label-text-with-icon mr-1" title="Selection">Selection</span>
+      <fa-icon [icon]="icons.help" [ngbTooltip]="helpSelection">
+      </fa-icon>
+    </label>
+    <div class="mx-lg-auto"></div>
+    <div class="col-7 col-sm-8 col-lg-auto">
+      <div class="btn-group btn-group-sm">
+        <button class="btn btn-secondary" (click)="changeWhiteListing([])">
+          None
+        </button>
+        <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.allModelNames)">
+          All
+        </button>
+        <button class="btn btn-secondary" (click)="changeWhiteListing(dataContext.ensembleModelNames)">
+          Ensemble
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row form-group settings-form-group">
+    <label class="col-5 col-sm-4 col-lg-auto col-form-label d-flex">
+      <span class="label-text-with-icon mr-1" title="Shift forecasts to">Shift forecasts to</span>
+      <fa-icon [icon]="icons.help" [ngbTooltip]="helpSelection">
+      </fa-icon>
+    </label>
+    <div class="mx-lg-auto"></div>
+    <div class="col-7 col-sm-8 col-lg-auto">
+      <div class="btn-group btn-group-toggle btn-group-sm" ngbRadioGroup
+        (ngModelChange)="changeShiftToSource($event)" [ngModel]="dataContext.shiftToSource">
+        <label ngbButtonLabel class="btn-secondary">
+          <input ngbButton type="radio" [value]="null"> None
+        </label>
+        <label ngbButtonLabel class="btn-secondary">
+          <input ngbButton type="radio" [value]="TruthToPlotSource.ECDC">
+          {{TruthToPlotSource.ECDC | labelTruthToPlotSource}}
+        </label>
+        <label ngbButtonLabel class="btn-secondary">
+          <input ngbButton type="radio" [value]="TruthToPlotSource.JHU">
+          {{TruthToPlotSource.JHU | labelTruthToPlotSource}}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row">
     <div class="col-12">
       <div class="form-inline">
         <div class="d-inline-flex flex-row mr-3 mb-2" style="max-width: 100%;">
@@ -42,7 +90,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
 

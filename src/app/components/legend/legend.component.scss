@@ -19,7 +19,7 @@
 @include media-breakpoint-up(lg) {
   .legend-row {
     flex-wrap: nowrap;
-    max-height: calc(100% - 78px);
+    max-height: calc(100% - ((38px + 0.5rem) * 2));
     .card {
       max-height: 100%;
     }
@@ -77,11 +77,32 @@
 }
 
 // @include media-breakpoint-up(xl) {
-  .list-group-models {
-    overflow-y: auto;
-  }
+.list-group-models {
+  overflow-y: auto;
+}
 
-  .list-group-shifted {
-    min-height: 150px;
-  }
+.list-group-shifted {
+  min-height: 150px;
+}
 // }
+
+.label-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label-text-with-icon {
+  @extend .label-text;
+
+  max-width: calc(100% - 16px);
+}
+
+.col-form-label {
+  flex-shrink: 1;
+  max-width: calc(100% - 227px);
+}
+
+.settings-form-group {
+  margin-bottom: 0.5rem;
+}
