@@ -3,7 +3,10 @@
     <div class="row">
       <div class="col-md-6">
         <div class="row form-group">
-          <label class="col-xl-3 col-form-label">Location</label>
+          <label class="col-xl-3 col-form-label">
+            Location
+            <fa-icon [icon]="icons.help" [ngbTooltip]="helpLocation"></fa-icon>
+          </label>
           <div class="col-xl-9">
             <app-location-select></app-location-select>
           </div>
@@ -230,3 +233,6 @@
   and less
   reliable for large forecast horizons. For cases, forecats beyond two weeks may be thrown off by new intervention
   measures. We therefore only show one and two week ahead forecasts by default.</ng-template>
+<ng-template #helpLocation>We currently focus on national level forecasts for Germany and Poland. Teams are encouraged to
+  also submit regional-level forecasts, but there are only few teams currently working on these.
+</ng-template>
