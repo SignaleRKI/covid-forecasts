@@ -36,23 +36,66 @@
       href="https://github.com/KITmetricslab/covid19-forecast-hub-de/wiki/Forecast-targets" target="_blank">here</a>.
   </p>
 
-  <h4 class="display-4">Limitations</h4>
+  <a id="limitations"><h4 class="display-4" style="padding-top: 55px; margin-top: -55px;" >Interpretation of Forecasts / Limitations</h4></a>
 
   <p>Our project aims at both providing forecasts in real time and evaluating systematically how reliable these forecasts are.
-  Please keep the following in mind when interpreting forecasts:
+    Please keep the following in mind when interpreting forecasts:
   </p>
 
   <ul>
-  <li>COVID-19 forecasts have proven challenging in the past. Especially case forecasts have not always been accurate
-  (as deaths are a more lagged measure they are somewhat easier to predict). We collect forecasts up to four weeks into the future,
-  but recommend focusing on forecasts one and two weeks into the future.
-  Especially case forecasts at three and four weeks can be invalidated by changing intervention measures or shifts in behaviour.</li>
-  <li>We ask forecasters to quantify the uncertainty of their forecasts via prediction intervals. However, the coverage of
-  prediction intervals has empirically been lower than the nominal levels (i.e. 95% prediction intervals contained the eventually
-  observed value in less than 95% of the cases). In other words, uncertainty has been underestimated and forecasts were on average
-  too confident.</li>
+  <li> <b>COVID-19 forecasts have proven challenging in the past.</b> Especially case forecasts have not always been accurate
+  (as deaths are a more lagged measure they are somewhat easier to predict).</li>
+  <li>We collect model outputs up to four weeks into the future, but <b>recommend focusing on forecasts one and two weeks into the future</b>.</li>
+  <li>Confirmed cases up to 1 to 2 weeks ahead and deaths up to 3 weeks ahead are assumed to be largely unaffected by future changes in control measures
+  (see <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/938965/201031_SPI-M-O_medium_term_projections_explainer.pdf" target="_blank">here</a>
+  for a similar reasoning by the UK Scientific Pandemic Influenza Group on Modelling). Beyond these time horizons, outputs from most models should be interpreted
+  as <b>"baseline projections"</b>, i.e. projections under the assumption of no change in interventions, behaviour and testing.
+  They are no longer valid if these aspects change.</li>
+  <li> Forecasters are asked to quantify the uncertainty of their forecasts via prediction intervals. However, the coverage of prediction intervals has empirically
+  been lower than the nominal levels (i.e. 95% prediction intervals contained the eventually observed value in less than 95% of the cases).
+  In other words, <b>uncertainty has been underestimated</b> and forecasts were on average too confident.</li>
+  <li>We expect the course of the epidemic around <b>Christmas</b> to be difficult to predict, so forecasts should be interpreted with special care.</li>
   </ul>
   
+
+  <h4 class="display-4">Forecast Evaluation</h4>
+  <p>
+    One goal of this platform is to compare the forecast performance of different models systematically. Results will be
+    included on this website shortly. An outline of the methods used for evaluation can be found in this <a
+      href="https://arxiv.org/abs/2005.12881" target="_blank">preprint</a>.
+  </p>
+
+  <h4 class="display-4">Ensemble Building</h4>
+  <p>
+    Each week we combine the different forecasts submitted to the platform into so-called ensemble forecasts. Such
+    combined forecasts are known to yield more reliable predictions in many domains and are becoming increasingly used
+    in epidemiology. See <a href="https://www.medrxiv.org/content/10.1101/2020.08.19.20177493v1"
+      target="_blank">here</a> for a recent preprint on
+    ensemble forecasts based on the US COVID-19 Forecast Hub. Technical details are provided in <a
+      href="https://github.com/KITmetricslab/covid19-forecast-hub-de/wiki/Creation-of-equally-weighted-ensemble"
+      target="_blank">this wiki entry</a>.
+  </p>
+
+  <p>
+    More specifically, we provide three different ensemble models that are computed as follows:
+  </p>
+
+  <ul>
+    <li><b>KITCOVIDhub-median_ensemble</b> <br> An average of forecasts submitted by different models, computed as the median (per quantile). </li>
+    <li><b>KITCOVIDhub-mean_ensemble</b> <br> An average of forecasts submitted by different models, computed as the mean (per quantile). </li>
+    <li><b>KITCOVIDhub-inverse_WIS_ensemble</b> <br> A weighted average of forecasts submitted by different models,
+    with weights computed from the average performance over the last three weeks.</li>
+  </ul>
+
+  <h4 class="display-4">Baselines</h4>
+  <p>
+    As a reference in our forecast evaluation study the Forecast Hub Team generates forecasts from two simple reference models:
+  </p>
+
+  <ul>
+    <li><b>KIT-baseline</b> <br> A naive model that always predicts that the number of new cases/deaths will be the same as last week (in expectation). </li>
+    <li><b>KIT-time_series_baseline</b> <br> A statistical time series model (exponential smoothing with multiplicative error terms). </li>
+  </ul>
 
   <h4 class="display-4" id="datasources">Data Sources</h4>
 
@@ -103,26 +146,9 @@
     </div>
   </div>
 
+
   <h4 class="display-4">Get Involved</h4>
-  <p>If you are working on forecasting of COVID-19 dynamics in Germany and/or Poland do not hesitate to get in touch
+  <p>If you are working on forecasting of COVID-19 dynamics in Germany and/or Poland do not hesitate to <a href="mailto:forecasthub@econ.kit.edu" target="_blank">get in touch</a>
     with us.</p>
-
-  <h4 class="display-4">Forecast Evaluation</h4>
-  <p>
-    One goal of this platform is to compare the forecast performance of different models systematically. Results will be
-    included on this website shortly. An outline of the methods used for evaluation can be found in this <a
-      href="https://arxiv.org/abs/2005.12881" target="_blank">preprint</a>.
-  </p>
-
-  <h4 class="display-4">Ensemble Building</h4>
-  <p>
-    Each week we combine the different forecasts submitted to the platform into so-called ensemble forecasts. Such
-    combined forecasts are known to yield more reliable predictions in many domains and are becoming increasingly used
-    in epidemiology. See <a href="https://www.medrxiv.org/content/10.1101/2020.08.19.20177493v1"
-      target="_blank">here</a> for a recent preprint on
-    ensemble forecasts based on the US COVID-19 Forecast Hub. Technical details are provided in <a
-      href="https://github.com/KITmetricslab/covid19-forecast-hub-de/wiki/Creation-of-equally-weighted-ensemble"
-      target="_blank">this wiki entry</a>.
-  </p>
 
 </div>
