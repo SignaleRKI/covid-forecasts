@@ -9,6 +9,7 @@ import { faChevronLeft, faChevronRight, faExclamationTriangle, faEye, faEyeSlash
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { LocationLookupItem } from 'src/app/models/lookups';
 import { contributorsByModelName } from 'src/app/models/contributors';
+import { kitModelsByModelName } from 'src/app/models/kit-models';
 
 type LegendItem = ForecastLegendItem | DataSourceLegendItem;
 
@@ -84,6 +85,11 @@ export class LegendComponent implements OnInit, AfterViewInit {
         let tooltipText = m.name;
         if (contributorsByModelName.has(m.name)) {
           const contrib = contributorsByModelName.get(m.name);
+          tooltipText = `${m.name}: ${contrib.method}`;
+        }
+
+        if (kitModelsByModelName.has(m.name)) {
+          const contrib = kitModelsByModelName.get(m.name);
           tooltipText = `${m.name}: ${contrib.method}`;
         }
 
