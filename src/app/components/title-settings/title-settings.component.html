@@ -3,7 +3,10 @@
     <div class="row">
       <div class="col-md-6">
         <div class="row form-group">
-          <label class="col-xl-3 col-form-label">Location</label>
+          <label class="col-xl-3 col-form-label">
+            Location
+            <fa-icon [icon]="icons.help" [ngbTooltip]="helpLocation"></fa-icon>
+          </label>
           <div class="col-xl-9">
             <app-location-select></app-location-select>
           </div>
@@ -125,7 +128,10 @@
         <ng-container>
           <div class="row form-group" style="margin-bottom: 0;"
             *ngIf="displayMode.mode.$type === 'ForecastDateDisplayMode'">
-            <label class="col-xl-3 col-form-label label-text" title="Forecast date">Forecast date</label>
+            <label class="col-xl-3 col-form-label">
+              Forecast date
+              <fa-icon [icon]="icons.help" [ngbTooltip]="helpForecastDate"></fa-icon>
+            </label>
             <div class="col-xl-9">
               <div class="btn-toolbar">
                 <div class="btn-group mr-1 mb-1">
@@ -221,12 +227,20 @@
   Forecasts are available for confirmed cases and deaths from COVID-19. For both targets forecasts can be shown on an
   incident (new cases or deaths) or cumulative (total cases or deaths) scale.
 </ng-template>
+<ng-template #helpForecastDate>
+  You can browse forecasts issued in the past by selecting a forecast date here. There is thus
+  a permanent record allowing you to visually assess the accurracy of past predictions.
+</ng-template>
 <ng-template #helpForecastBy>
   You can either look at one through four-week-ahead forecasts made at a specific time point or show all forecasts for
-  a
-  specific forecast horizon.
+  a specific forecast horizon.
 </ng-template>
-<ng-template #helpShowUpTo>Teams provide predictions up to four weeks into the future but these become less informative
-  and less
-  reliable for large forecast horizons. For cases, forecats beyond two weeks may be thrown off by new intervention
-  measures. We therefore only show one and two week ahead forecasts by default.</ng-template>
+<ng-template #helpShowUpTo>Teams provide model outputs up to four weeks into the future but these become less informative
+and less reliable for longer forecast horizons. Three and four-week-ahead outputs (especially for cases) typically assume
+that control measures and population behaviour remain constant. They should thus be interpreted as "baseline projections"
+rather than true forecasts, and will no longer be valid if e.g. interventions change. We therefore only show one and two
+week ahead forecasts by default.</ng-template>
+<ng-template #helpLocation>We currently focus on national level forecasts for Germany and Poland. Teams are encouraged to
+  also submit regional-level forecasts, but there are only few teams currently working on these.
+</ng-template>
+

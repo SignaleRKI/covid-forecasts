@@ -28,6 +28,8 @@ export const contributors: Contributor[] = [
     model_name: 'ITWW-county_repro', paper_text: '', paper_url: ''},
   { name: 'Johannes Gutenberg University Mainz / University of Hamburg', method: 'Statistical dynamical growth model accounting for population susceptibility', link: 'https://github.com/QEDHamburg/covid19',
     model_name: 'JGU_UHH-SMM', paper_text: '', paper_url: ''},
+  { name: ' Karlen working group', method: 'Discrete-time difference equations with long periods of constant transmission rate', link: 'https://pypm.github.io/home/',
+    model_name: 'Karlen-pypm', paper_text: '(Paper)', paper_url: 'https://arxiv.org/abs/2007.07156'},
   { name: 'Los Alamos National Laboratory (LANL)', method: 'Dynamic growth rate approach', link: 'https://covid-19.bsvgateway.org/',
     model_name: 'LANL-GrowthRate', paper_text: '', paper_url: ''},
   { name: 'MOCOS Group, University of Wrozlaw', method: 'Agent-based microsimulation model', link: 'https://mocos.pl/',
